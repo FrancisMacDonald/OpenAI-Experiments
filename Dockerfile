@@ -1,6 +1,5 @@
 FROM alpine:latest as base
 LABEL maintainer="Francis MacDonald <francis@francism.ca>"
-LABEL version="0.0.1"
 
 RUN apk add --no-cache python3 py3-pip && \
     rm -rf /var/cache/apk/*
