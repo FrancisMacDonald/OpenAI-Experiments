@@ -12,6 +12,7 @@ class TriviaBot(AbstractDiscordBot):
     _trivia = None
     _time_up = None
     _answered = False
+    _double_points_mode_active = False
 
     _channels: dict[int, discord.channel.TextChannel] = {}
 
@@ -27,15 +28,15 @@ class TriviaBot(AbstractDiscordBot):
         print(f"{message.author}: {message.content} - {message.channel.name} ({message.channel.id})")
         await self.check_command(message)
 
-    def __init__(self, discord_bot_token, openai_api_key, trivia_channel_id, general_channel_id):
-        self._channels[trivia_channel_id] = None
-        self._channels[general_channel_id] = None
+    def __init__(self, discord_bot_token, openai_api_key, channels_ids: list[int]):
+        for channel_id in channels_ids:
+            self._channels[channel_id] = None
+
         self._leaderboard_file_name = 'triviabot_leaderboard.txt'
         self._time_up = None
 
         super().__init__(discord_bot_token)
         self._trivia = Trivia(openai_api_key, self._leaderboard_file_name)
-
 
     def get_seconds_remaining_until_next_question(self):
         return round((self._time_up - datetime.now()).total_seconds())
@@ -121,6 +122,12 @@ class TriviaBot(AbstractDiscordBot):
                 await message.channel.send(embed=self.get_active_question_as_embed())
             elif message.content == "!leaderboard":
                 await message.channel.send(embed=self.get_leaderboard_as_embed())
+            elif message.content == "!startdoublepoints":
+                self.start_double_points_mode()
+                await message.channel.send("Double points mode enabled")
+            elif message.content == "!stopdoublepoints":
+                self.stop_double_points_mode()
+                await message.channel.send("Double points mode disabled")
             # check if the message content contains !topic followed by a topic
             elif message.content.startswith("!topics"):
                 # change the topics
@@ -139,7 +146,7 @@ class TriviaBot(AbstractDiscordBot):
                 await self.check_guess(message)
 
     async def start_double_points_mode_loop(self):
-        while True:
+        while self._double_points_mode_active:
             _random_additional_seconds = random.randint(0, 60 * 30)
             await asyncio.sleep((60 * 30) + _random_additional_seconds)
             self._trivia.start_double_points_mode()
@@ -156,3 +163,9 @@ class TriviaBot(AbstractDiscordBot):
 
     def is_connected_to_server(self):
         return len(self._bot.guilds) > 0
+
+    def start_double_points_mode(self):
+        self._double_points_mode_active = True
+
+    def stop_double_points_mode(self):
+        self._double_points_mode_active = False
