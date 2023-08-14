@@ -4,7 +4,7 @@ async-timeout==4.0.2
 attrs==23.1.0
 certifi==2023.7.22
 charset-normalizer==3.1.0
-discord==2.3.1
+discord==2.3.2
 discord.py==2.3.1
 frozenlist==1.4.0
 idna==3.4
