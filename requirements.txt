@@ -11,6 +11,6 @@ idna==3.7
 multidict==6.0.5
 openai==1.23.2
 requests==2.31.0
-tqdm==4.66.2
+tqdm==4.66.3
 urllib3==2.2.1
 yarl==1.9.4
