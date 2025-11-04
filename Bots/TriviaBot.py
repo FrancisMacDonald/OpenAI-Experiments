@@ -124,9 +124,11 @@ class TriviaBot(AbstractDiscordBot):
                 await message.channel.send(embed=self.get_leaderboard_as_embed())
             elif message.content == "!startdoublepoints":
                 self.start_double_points_mode()
+                self._trivia.start_double_points_mode()
                 await message.channel.send("Double points mode enabled")
             elif message.content == "!stopdoublepoints":
                 self.stop_double_points_mode()
+                self._trivia.stop_double_points_mode()
                 await message.channel.send("Double points mode disabled")
             # check if the message content contains !topic followed by a topic
             elif message.content.startswith("!topics"):
