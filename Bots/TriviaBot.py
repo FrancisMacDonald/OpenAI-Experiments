@@ -12,7 +12,7 @@ class TriviaBot(AbstractDiscordBot):
     _trivia = None
     _time_up = None
     _answered = False
-    _double_points_mode_active = False
+    _double_points_mode_active = True
 
     _channels: dict[int, discord.channel.TextChannel] = {}
 
